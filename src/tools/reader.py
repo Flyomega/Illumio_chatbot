@@ -32,7 +32,7 @@ def get_pdf_title_styles(path):
 
 
 def test_get_font_sizes_of_a_page(page : int):
-    with open(os.path.abspath("../../../../../Downloads/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"), 'rb') as f:
+    with open(os.path.abspath("../../data/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"), 'rb') as f:
         reader = pdfp.PDF(f)
         page = reader.pages[page]
         dictionary = page.extract_text_lines()

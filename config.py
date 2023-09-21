@@ -1,0 +1,1 @@
+OPEN_IA_KEY = "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"

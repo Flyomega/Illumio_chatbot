@@ -1,15 +1,15 @@
 import os
 import pdfplumber as pdfp
-from paragraph import Paragraph
+from Ilumio_chatbot.src.model.paragraph import Paragraph
 
 def get_pdf_title_styles(path):
     page_number = 1
     with open(path, 'rb') as f:
         reader = pdfp.PDF(f)
         for page in reader.pages:
-            dictionary = page.extract_text_lines()# Lines maybe
+            dictionary = page.extract_text_lines()
             for i in range(len(dictionary)):
-                p = Paragraph(dictionary[i]["text"],"unknown")
+                p = Paragraph(dictionary[i]["text"],"unknown",i,page_id=page_number)
                 if dictionary[i]["chars"][0]["size"] >= 9 and dictionary[i]["chars"][0]["size"] < 12.8:
                     p.font_type = "content"
                 elif dictionary[i]["chars"][0]["size"] >= 12.8 and dictionary[i]["chars"][0]["size"] <= 13.5:
@@ -30,8 +30,8 @@ def get_pdf_title_styles(path):
             page_number += 1
 
 
-def test_get_font_sizes_of_a_page(page : int):
-    with open(os.path.abspath("../../data/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"), 'rb') as f:
+def test_get_font_sizes_of_a_page(page : int, path):
+    with open(os.path.abspath(path)) as f:
         reader = pdfp.PDF(f)
         page = reader.pages[page]
         dictionary = page.extract_text_lines()
@@ -39,7 +39,8 @@ def test_get_font_sizes_of_a_page(page : int):
             print(f'{i} : {dictionary[i]["chars"][0]["size"]} ->>>>> {dictionary[i]["text"]}')
 
 
-get_pdf_title_styles(os.path.abspath("../../data/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"))
+# path = "data/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"
+# get_pdf_title_styles(os.path.abspath(path))
 # print("--------------------------------------------------")
 # print("--------------------------------------------------")
 #print(test_get_font_sizes_of_a_page(8))

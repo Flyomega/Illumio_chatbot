@@ -36,7 +36,7 @@ class LlmAgent:
         p = self.llm(template)
         return p
 
-    def generate_answer(self, query: str, answer_en: str, histo_fr: str, context_fr: str) -> str:
+    def generate_answer(self, query: str, answer_en: str, histo: str, context: str) -> str:
         """provides the final answer in French based on the initial query and the answer in english"""
 
         def _cut_unfinished_sentence(s: str):
@@ -46,12 +46,13 @@ class LlmAgent:
                     f"delimited by triple backticks: ```{query}``` \\n"
                     f"You are given the answer in english delimited by triple backticks: ```{answer_en}```"
                     f"\\n You don't add new content to the answer in English but: "
-                    f"\\n 1 You can use some vocabulary from the context in French delimited by triple backticks: "
-                    f"```{context_fr}```"
+                    f"\\n 1 You can use some vocabulary from the context in English delimited by triple backticks: "
+                    f"```{context}```"
                     f"\\n 2 You are consistent and avoid redundancies with the rest of the initial"
-                    f" conversation in French delimited by triple backticks: ```{histo_fr}```"
+                    f" conversation in English delimited by triple backticks: ```{histo}```"
                     )
 
         p = self.llm(template)
         # p = _cut_unfinished_sentence(p)
         return p
+

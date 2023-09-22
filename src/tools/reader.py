@@ -2,7 +2,9 @@ import os
 import pdfplumber as pdfp
 from Ilumio_chatbot.src.model.paragraph import Paragraph
 
+
 def get_pdf_title_styles(path):
+    paragraphs = []
     page_number = 1
     with open(path, 'rb') as f:
         reader = pdfp.PDF(f)
@@ -11,23 +13,25 @@ def get_pdf_title_styles(path):
             for i in range(len(dictionary)):
                 p = Paragraph(dictionary[i]["text"],"unknown",i,page_id=page_number)
                 if dictionary[i]["chars"][0]["size"] >= 9 and dictionary[i]["chars"][0]["size"] < 12.8:
-                    p.font_type = "content"
+                    p.font_style = "content"
                 elif dictionary[i]["chars"][0]["size"] >= 12.8 and dictionary[i]["chars"][0]["size"] <= 13.5:
-                    p.font_type = "title4"
+                    p.font_style = "title4"
                 elif dictionary[i]["chars"][0]["size"] > 13.5 and dictionary[i]["chars"][0]["size"] <= 15.5:
-                    p.font_type = "title3"
+                    p.font_style = "title3"
                 elif dictionary[i]["chars"][0]["size"] > 15.5 and dictionary[i]["chars"][0]["size"] <= 18.5:
-                    p.font_type = "title2"
+                    p.font_style = "title2"
                 elif dictionary[i]["chars"][0]["size"] > 19 and dictionary[i]["chars"][0]["size"] < 30:
-                    p.font_type = "title1"
+                    p.font_style = "title1"
                 if(i != len(dictionary)-1):
                     while(dictionary[i+1]["chars"][0]["size"] == dictionary[i]["chars"][0]["size"]):
                         p.text += " " + dictionary[i+1]["text"]
                         i += 1
                         if(i == len(dictionary)-1):
                             break
-                print(f'{i} : {p.font_type} ->>>>> {p.text}')
+                print(f'{i} : {p.font_style} ->>>>> {p.text}')
+                paragraphs.append(p)
             page_number += 1
+    return paragraphs
 
 
 def test_get_font_sizes_of_a_page(page : int, path):
@@ -37,6 +41,7 @@ def test_get_font_sizes_of_a_page(page : int, path):
         dictionary = page.extract_text_lines()
         for i in range(len(dictionary)):
             print(f'{i} : {dictionary[i]["chars"][0]["size"]} ->>>>> {dictionary[i]["text"]}')
+
 
 
 # path = "data/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"

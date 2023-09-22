@@ -29,4 +29,4 @@ llm = LlmAgent(llm_model)
 
 # ilumio_qna = view.run(ctrl=controller, config=view_config)
 
-ilumio_qna.queue().launch()
+# ilumio_qna.queue().launch()

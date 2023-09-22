@@ -28,7 +28,7 @@ def get_pdf_title_styles(path):
                         i += 1
                         if(i == len(dictionary)-1):
                             break
-                print(f'{i} : {p.font_style} ->>>>> {p.text}')
+                print(f'{p.page_id} : {p.font_style} ->>>>> {p.text}')
                 paragraphs.append(p)
             page_number += 1
     return paragraphs

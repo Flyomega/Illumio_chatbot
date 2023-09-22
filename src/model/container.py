@@ -1,5 +1,5 @@
-from paragraph import Paragraph
-from block import Block
+from .paragraph import Paragraph
+from .block import Block
 
 class Container:
 

@@ -1,6 +1,6 @@
 content_language = 'en'
 plan_language = 'en'
-content_en_path = "data/Ilumio_Core_REST_API_Developer_Guide_23.3.pdf"
+content_en_path = "Ilumio_chatbot/data/Illumio_Core_REST_API_Developer_Guide_23.3.pdf"
 
 
 examples = {

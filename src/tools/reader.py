@@ -1,6 +1,6 @@
 import os
 import pdfplumber as pdfp
-from Ilumio_chatbot.src.model.paragraph import Paragraph
+from src.model.paragraph import Paragraph
 
 
 def get_pdf_title_styles(path):
@@ -10,7 +10,8 @@ def get_pdf_title_styles(path):
         reader = pdfp.PDF(f)
         for page in reader.pages:
             dictionary = page.extract_text_lines()
-            for i in range(len(dictionary)):
+            i = 0
+            while i < len(dictionary):
                 p = Paragraph(dictionary[i]["text"],"unknown",i,page_id=page_number)
                 if dictionary[i]["chars"][0]["size"] >= 9 and dictionary[i]["chars"][0]["size"] < 12.8:
                     p.font_style = "content"
@@ -28,6 +29,9 @@ def get_pdf_title_styles(path):
                         i += 1
                         if(i == len(dictionary)-1):
                             break
+                else:
+                    p.text = dictionary[i]["text"]
+                i += 1
                 print(f'{p.page_id} : {p.font_style} ->>>>> {p.text}')
                 paragraphs.append(p)
             page_number += 1

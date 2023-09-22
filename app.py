@@ -4,7 +4,6 @@ from langchain.llms import OpenAI
 import chromadb
 
 from config import *
-from src.control.control import Controller
 from src.tools.reader import get_pdf_title_styles
 from src.tools.llm import LlmAgent
 import src.view.view as view
@@ -18,7 +17,7 @@ if not "OPENAI_API_KEY" in os.environ:
 
 
 all_paragraphs = get_pdf_title_styles(os.path.abspath(content_en_path))
-Pdf_container = Container(all_paragraphs, title="Illumio Core REST API Developer Guide")
+Pdf_container = Container(all_paragraphs)
 
 client_db = chromadb.Client()
 

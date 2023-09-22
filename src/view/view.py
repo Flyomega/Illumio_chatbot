@@ -1,8 +1,8 @@
 import gradio as gr
-from src.control.control import Controller
+from src.control.control import Chatbot
 
 
-def run(ctrl: Controller, config: {}):
+def run(ctrl: Chatbot, config: {}):
     with gr.Blocks() as qna:
         with gr.Row():
             with gr.Column():

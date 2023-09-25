@@ -1,5 +1,9 @@
 config_key.py
 
+
+#Test folder
+data/Test/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

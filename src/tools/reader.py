@@ -79,8 +79,7 @@ def get_pdf_title_styles(path):
             if(dictionary[i]["text"].startswith("RESTAPIDeveloperGuide")):
                 i+=1
                 continue
-            p = Paragraph(dictionary[i]["text"],"unknown",i,page_id=pdf_to_read[j]["page_number"])
-            p.font_style = get_style_of_line(dictionary[i]["chars"][0]["size"])
+            p = Paragraph(dictionary[i]["text"],font_style=get_style_of_line(dictionary[i]["chars"][0]["size"]),id_=i,page_id=pdf_to_read[j]["page_number"])
             if(i != len(dictionary)-1):
                 while(dictionary[i+1]["chars"][0]["size"] == dictionary[i]["chars"][0]["size"]):
                     p.text += " " + dictionary[i+1]["text"]

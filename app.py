@@ -21,7 +21,7 @@ if not "OPENAI_API_KEY" in os.environ:
 
 all_paragraphs = get_pdf_title_styles(os.path.abspath(content_en_path_real))
 # pretty_printer_paragraphs(all_paragraphs)
-Pdf_container = Container(all_paragraphs)
+Pdf_container = Container(all_paragraphs,level=0)
 # pretty_print_container_structure(Pdf_container)
 
 

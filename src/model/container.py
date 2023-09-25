@@ -24,7 +24,7 @@ class Container:
 
 
     def get_blocks(self):
-        block = Block(level=self.level,index=self.index)
+        block = Block(level=self.level, index=self.index)
         if self.title:
             block.title = self.title.text
         for p in self.paragraphs:

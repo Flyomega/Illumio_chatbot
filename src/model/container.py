@@ -5,12 +5,13 @@ INFINITE = 99999
 
 class Container:
 
-    def __init__(self, paragraphs : [Paragraph], title : Paragraph=None, level: int = 0, index: [int]=None , father=None, id_ : int = 0):
+    def __init__(self, paragraphs : [Paragraph], title : Paragraph=None, level: int = 0, index: [int] = None , father=None, id_ = 0):
         if index is None:
             index = []
         self.level = level
         self.paragraphs = []
         self.title = title
+        self.index = index
         self.children = []
         self.father = father
         if(father == None):
@@ -21,6 +22,18 @@ class Container:
             self.paragraphs, self.children = self.create_children(paragraphs, level,index)
         self.blocks = self.get_blocks()
 
+
+    def get_blocks(self):
+        block = Block(level=self.level,index=self.index)
+        if self.title:
+            block.title = self.title.text
+        for p in self.paragraphs:
+            if not p.blank:
+                block.content += p.text
+        blocks = [block] if block.content else []
+        for child in self.children:
+            blocks += child.blocks
+        return blocks
 
     def create_children(self, paragraphs: Paragraph, level: int, index: [int]) -> ([Paragraph], []):
         """
@@ -71,14 +84,3 @@ class Container:
 
         return attached_paragraphs, children
     
-    def get_blocks(self):
-        block = Block(level=self.level,index=self.)
-        if self.title:
-            block.title = self.title.text
-        for p in self.paragraphs:
-            if not p.blank:
-                block.content += p.text
-        blocks = [block] if block.content else []
-        for child in self.children:
-            blocks += child.blocks
-        return blocks

@@ -11,6 +11,7 @@ from src.tools.pretty_print import pretty_print_container_structure, pretty_prin
 from src.model.container import Container
 from src.control.control import Chatbot
 from src.tools.retriever import Retriever
+from src.model.doc import Doc
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
@@ -19,21 +20,20 @@ if not "OPENAI_API_KEY" in os.environ:
     os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 
-all_paragraphs = get_pdf_title_styles(os.path.abspath(content_en_path_real))
-# pretty_printer_paragraphs(all_paragraphs)
-Pdf_container = Container(all_paragraphs,level=0)
-# pretty_print_container_structure(Pdf_container)
+doc = Doc(path=content_en_path_real)
+# pretty_printer_paragraphs(doc.container.paragraphs)
+# pretty_print_container_structure(doc.container)
 
 
 client_db = chromadb.Client()
 
-retriever = Retriever(client_db,Pdf_container,"test")
+retriever = Retriever(client_db,doc.container,"test")
 
-llm_model = OpenAI(temperature=0)
-llm = LlmAgent(llm_model)
+# llm_model = OpenAI(temperature=0)
+# llm = LlmAgent(llm_model)
 
-chat = Chatbot(llm_agent=llm, retriever=retriever)
+# chat = Chatbot(llm_agent=llm, retriever=retriever)
 
-ilumio_qna = view.run(ctrl=chat, config=view_config)
+# ilumio_qna = view.run(ctrl=chat, config=view_config)
 
-ilumio_qna.queue().launch()
+# ilumio_qna.queue().launch()

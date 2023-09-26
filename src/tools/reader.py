@@ -1,6 +1,7 @@
 import os
 import pdfplumber as pdfp
 from src.model.paragraph import Paragraph
+import asyncio
 
 def skip_header(dictionary):
     i = 0
@@ -80,7 +81,7 @@ def extract_all_lines_from_the_doc(path):
     lines_of_doc = []
     with open(path, 'rb') as f:
         reader = pdfp.PDF(f)
-        skip_table_of_contents = reader.pages[8:40]
+        skip_table_of_contents = reader.pages[8:9]
         j = 0
         while j < len(skip_table_of_contents):
             lines_of_doc.append({"page_number": j+9, "content": skip_table_of_contents[j].extract_text_lines()})

@@ -12,6 +12,7 @@ from src.model.container import Container
 from src.control.control import Chatbot
 from src.tools.retriever import Retriever
 from src.model.doc import Doc
+from src.tools.test_read import pdf_manager
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
@@ -20,14 +21,15 @@ if not "OPENAI_API_KEY" in os.environ:
     os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 
-doc = Doc(path=content_en_path_real)
+pdf_manager(pdf_path=content_en_path_real)
+# doc = Doc(path=content_en_path_real)
 # pretty_printer_paragraphs(doc.container.paragraphs)
 # pretty_print_container_structure(doc.container)
 
 
-client_db = chromadb.Client()
+# client_db = chromadb.Client()
 
-retriever = Retriever(client_db,doc.container,"test")
+# retriever = Retriever(client_db,doc.container,"test")
 
 # llm_model = OpenAI(temperature=0)
 # llm = LlmAgent(llm_model)

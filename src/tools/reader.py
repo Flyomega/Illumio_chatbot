@@ -23,6 +23,10 @@ def get_style_of_line(size : float):
         return "title2"
     elif size > 19 and size < 30:
         return "title1"
+    # elif size >= 12 and size <= 14.5:
+    #     return "title2"
+    # elif size > 14.5 and size <= 16.5:
+    #     return "title1"
     else:
         return "unknown"
 
@@ -81,7 +85,7 @@ def extract_all_lines_from_the_doc(path):
     lines_of_doc = []
     with open(path, 'rb') as f:
         reader = pdfp.PDF(f)
-        skip_table_of_contents = reader.pages[8:9]
+        skip_table_of_contents = reader.pages[8:]
         j = 0
         while j < len(skip_table_of_contents):
             lines_of_doc.append({"page_number": j+9, "content": skip_table_of_contents[j].extract_text_lines()})

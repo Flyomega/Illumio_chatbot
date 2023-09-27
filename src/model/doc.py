@@ -28,13 +28,28 @@ class Doc:
             return index_str
 
         blocks = self.container.blocks
+        blocks = self.delete_duplicate()
         for block in blocks:
             block.doc = self.title
-            if block.level == 0:
-                blocks.remove(block)
             block.index = from_list_to_str(block.index)
-            print(block.index + ' ------> ' + block.content)
+            print(block.index + ' : ' + block.title)
         return blocks
+    
+
+    def delete_duplicate(self):
+        while self.found_duplicates(self.container.blocks):
+            for i in range(len(self.container.blocks) - 1):
+                if self.container.blocks[i].index == self.container.blocks[i + 1].index:
+                    if self.container.blocks[i].index != []:
+                        self.container.blocks[i].index.pop()
+        return self.container.blocks
+        
+    def found_duplicates(self, blocks):
+        for i in range(len(blocks) - 1):
+            if blocks[i].index == blocks[i + 1].index:
+                return True
+        return False
+
 """
     current_level = len(current_index)
     if 0 < block.level:

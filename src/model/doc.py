@@ -32,7 +32,6 @@ class Doc:
         for block in blocks:
             block.doc = self.title
             block.index = from_list_to_str(block.index)
-            print(block.index + ' : ' + block.title)
         return blocks
     
 

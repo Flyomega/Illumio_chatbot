@@ -52,7 +52,7 @@ def run(ctrl: Chatbot, config: {}):
             return update_
 
         def input_text_fn2(input_text_, histo_text_):
-            answer, sources = ctrl.get_response(query_fr=input_text_, histo_fr=histo_text_)
+            answer, sources = ctrl.get_response(query=input_text_, histo=histo_text_)
             histo_text_[-1] = (input_text_, answer)
             update_ = {
                 histo_text_comp: gr.update(value=histo_text_),
@@ -60,8 +60,8 @@ def run(ctrl: Chatbot, config: {}):
             }
             for i in range(min(len(sources), 3)):
                 s = sources[i]
-                source_label = f'{s.index}   {s.title_fr}                        score = {s.distance_str}'
-                source_text = s.content_fr
+                source_label = f'{s.index}   {s.title}                        score = {s.distance_str}'
+                source_text = s.content
                 update_[source_text_comp[i]] = gr.update(visible=True, value=source_text, label=source_label)
             return update_
 

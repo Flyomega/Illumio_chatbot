@@ -3,14 +3,17 @@ from src.model.block import Block
 from src.model.doc import Doc
 
 class Retriever:
-    def __init__(self,db_client,doc : Doc,collection_name:str):
-        self.collection = db_client.create_collection(name=collection_name)
-        blocks_good_format: [Block] = doc.blocks
-        self.collection.add(
-            documents=[block.content for block in blocks_good_format],
-            ids=[block.index for block in blocks_good_format],
-            metadatas=[block.to_dict() for block in blocks_good_format]
-        )
+    def __init__(self,db_client,doc : Doc = None, collection_name:str = "illumio_database"):
+        if doc != None:
+            self.collection = db_client.create_collection(name=collection_name)
+            blocks_good_format: [Block] = doc.blocks
+            self.collection.add(
+                documents=[block.content for block in blocks_good_format],
+                ids=[block.index for block in blocks_good_format],
+                metadatas=[block.to_dict() for block in blocks_good_format]
+            )
+        else:
+            self.collection = db_client.get_collection(name=collection_name)
 
 
 

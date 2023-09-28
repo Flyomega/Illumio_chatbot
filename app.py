@@ -20,22 +20,29 @@ if not "OPENAI_API_KEY" in os.environ:
     from config_key import OPENAI_API_KEY
     os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
-
-pdf_manager(pdf_path=content_en_path_real)
-# doc = Doc(path=content_en_path_real)
+#check if the database is empty
+# pdf_manager(pdf_path=content_en_path_real)
 # pretty_printer_paragraphs(doc.container.paragraphs)
 # pretty_print_container_structure(doc.container)
 
+if not os.path.exists("Ilumio_chatbot/database/"):
+    os.makedirs("Ilumio_chatbot/database/")
 
-# client_db = chromadb.Client()
+client_db = chromadb.PersistentClient(path="Ilumio_chatbot/database/")
 
-# retriever = Retriever(client_db,doc.container,"test")
+try: 
+    client_db.get_collection(name="illumio_database")
+    retriever = Retriever(client_db, None, "illumio_database")
+except:
+    print("Database is empty")
+    doc = Doc(path=content_en_path_real)
+    retriever = Retriever(client_db,doc.container,"illumio_database")
 
-# llm_model = OpenAI(temperature=0)
-# llm = LlmAgent(llm_model)
+llm_model = OpenAI(temperature=0)
+llm = LlmAgent(llm_model)
 
-# chat = Chatbot(llm_agent=llm, retriever=retriever)
+chat = Chatbot(llm_agent=llm, retriever=retriever)
 
-# ilumio_qna = view.run(ctrl=chat, config=view_config)
+ilumio_qna = view.run(ctrl=chat, config=view_config)
 
-# ilumio_qna.queue().launch()
+ilumio_qna.queue().launch()

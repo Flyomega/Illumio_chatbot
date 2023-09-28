@@ -25,7 +25,7 @@ class Chatbot:
     
 
     @staticmethod
-    def _select_best_sources(sources: [Block], delta_1_2=0.15, delta_1_n=0.3, absolute=1.2, alpha=0.9) -> [Block]:
+    def  _select_best_sources(sources: [Block], delta_1_2=0.15, delta_1_n=0.3, absolute=1.2, alpha=0.9) -> [Block]:
         """
         Select the best sources: not far from the very best, not far from the last selected, and not too bad per se
         """

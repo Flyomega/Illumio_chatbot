@@ -17,6 +17,9 @@ class Container:
         self.id_ = int(str(1) + str(father.id_) + str(id_))
         if paragraphs:
             self.paragraphs, self.children = self.create_children(paragraphs, level, index)
+        self.containers = [self]
+        for child in self.children:
+            self.containers += child.containers
         self.blocks = self.get_blocks()
 
 
@@ -25,57 +28,98 @@ class Container:
         if self.title:
             block.title = self.title.text
         for p in self.paragraphs:
-            block.content += p.text
+            if not p.blank:
+                block.content += p.text
         blocks = [block] if block.content else []
         for child in self.children:
             blocks += child.blocks
         return blocks
 
-
-    def create_children(self, paragraphs: [Paragraph], level: int, index: [int]):
+    def create_children(self, paragraphs, level, rank) -> ([], []):
         """
-        Creates children containers and/or directly attached content and returns the list of attached content and the list of children containers.
-        The indexes correspond to the indexes of the paragraphs in the content and also on the structure.
-        :return: List of Content or Container
+        creates children containers or directly attached content
+        and returns the list of containers and contents of level+1
+        :return:
+        [Content or Container]
         """
         attached_paragraphs = []
+        container_paragraphs = []
+        container_title = None
         children = []
         in_children = False
         level = INFINITE
-        container_paragraphs = []
-        container_title = None
+        child_id = 0
 
         while paragraphs:
             p = paragraphs.pop(0)
-
             if not in_children and not p.is_structure:
                 attached_paragraphs.append(p)
             else:
                 in_children = True
-                if p.is_structure and p.level <= level:  # if p is higher in hierarchy, then the child is completed
+                if p.is_structure and not p.blank and p.level <= level:  # if p is higher or equal in hierarchy
                     if container_paragraphs or container_title:
-                        if level <= len(index):
-                            index = index[:level]
-                            index[-1] += 1
-                        else:
-                            for i in range(level-len(index)):
-                                index.append(1)
-                        children.append(Container(container_paragraphs, container_title, level, index.copy(), self))
+                        children.append(Container(container_paragraphs, container_title, level, rank, self, child_id))
+                        child_id += 1
                     container_paragraphs = []
                     container_title = p
                     level = p.level
-                else:  # p is normal text or strictly lower in hierarchy, then the child continues to grow
+
+                else:  # p is strictly lower in hierarchy
                     container_paragraphs.append(p)
+
         if container_paragraphs or container_title:
-            if level <= len(index):
-                index = index[:level]
-                index[-1] += 1
-            else:
-                for i in range(level - len(index)):
-                    index.append(1)
-            children.append(Container(container_paragraphs, container_title, level, index.copy(), self))
+            children.append(Container(container_paragraphs, container_title, level, rank, self, child_id))
+            child_id += 1
 
         return attached_paragraphs, children
+
+
+    #REAL ONEEEEEEEEEEEEEEEEEEEEE
+
+    # def create_children(self, paragraphs: [Paragraph], level: int, index: [int]):
+    #     """
+    #     Creates children containers and/or directly attached content and returns the list of attached content and the list of children containers.
+    #     The indexes correspond to the indexes of the paragraphs in the content and also on the structure.
+    #     :return: List of Content or Container
+    #     """
+    #     attached_paragraphs = []
+    #     children = []
+    #     in_children = False
+    #     level = INFINITE
+    #     container_paragraphs = []
+    #     container_title = None
+
+    #     while paragraphs:
+    #         p = paragraphs.pop(0)
+
+    #         if not in_children and not p.is_structure:
+    #             attached_paragraphs.append(p)
+    #         else:
+    #             in_children = True
+    #             if p.is_structure and p.level <= level:  # if p is higher in hierarchy, then the child is completed
+    #                 if container_paragraphs or container_title:
+    #                     if level <= len(index):
+    #                         index = index[:level]
+    #                         index[-1] += 1
+    #                     else:
+    #                         for i in range(level-len(index)):
+    #                             index.append(1)
+    #                     children.append(Container(container_paragraphs, container_title, level, index.copy(), self))
+    #                 container_paragraphs = []
+    #                 container_title = p
+    #                 level = p.level
+    #             else:  # p is normal text or strictly lower in hierarchy, then the child continues to grow
+    #                 container_paragraphs.append(p)
+    #     if container_paragraphs or container_title:
+    #         if level <= len(index):
+    #             index = index[:level]
+    #             index[-1] += 1
+    #         else:
+    #             for i in range(level - len(index)):
+    #                 index.append(1)
+    #         children.append(Container(container_paragraphs, container_title, level, index.copy(), self))
+
+    #     return attached_paragraphs, children
 
 
 
@@ -127,7 +171,6 @@ class Container:
     #                     break
     #     return attached_paragraphs, children
     
-    
     @property
     def structure(self):
 
@@ -147,4 +190,3 @@ class Container:
         for child in self.children:
             structure += child.structure
         return structure
-    

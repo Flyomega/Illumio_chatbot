@@ -1,5 +1,6 @@
 from src.model.container import Container
 from src.model.paragraph import Paragraph
+from src.tools.index_creation import set_good_indexes
 from src.tools.reader import get_pdf_title_styles
 
 
@@ -7,12 +8,23 @@ class Doc:
 
     def __init__(self, path='', id_=None):
 
-        self.title = path.split('/')[-1]
+        self.title = self.get_good_title(path)
         self.id_ = id(self)
         self.path = path
         paragraphs = get_pdf_title_styles(path)
-        self.container = Container(paragraphs, father=self, level=0)
+        self.container = Container(paragraphs, father=self)
+        set_good_indexes(self.container)
         self.blocks = self.get_blocks()
+
+
+    def get_good_title(self,path):
+        if '/' in path:
+            res = path.split('/')[-1]
+        if '\\' in path:
+            res = path.split('\\')[-1]
+        else:
+            res = path
+        return res 
 
     @property
     def structure(self):
@@ -28,10 +40,11 @@ class Doc:
             return index_str
 
         blocks = self.container.blocks
-        blocks = self.delete_duplicate()
+        # blocks = self.delete_duplicate()
         for block in blocks:
             block.doc = self.title
             block.index = from_list_to_str(block.index)
+            print(block.index + ' ' + block.title)
         return blocks
     
 

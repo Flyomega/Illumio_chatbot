@@ -85,7 +85,7 @@ def extract_all_lines_from_the_doc(path):
     lines_of_doc = []
     with open(path, 'rb') as f:
         reader = pdfp.PDF(f)
-        skip_table_of_contents = reader.pages[8:]
+        skip_table_of_contents = reader.pages[8:16]
         j = 0
         while j < len(skip_table_of_contents):
             lines_of_doc.append({"page_number": j+9, "content": skip_table_of_contents[j].extract_text_lines()})

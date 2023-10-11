@@ -1,3 +1,5 @@
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
 class LlmAgent:
 
     def __init__(self, llm):
@@ -56,3 +58,39 @@ class LlmAgent:
         # p = _cut_unfinished_sentence(p)
         return p
 
+
+def transform_parahraph_into_question(prompt : str, title_doc : str = '',title_para : str = '', model_name : str = "TheBloke/Llama-2-13b-Chat-GPTQ") -> str:
+    model_name_or_path = model_name
+    model = AutoModelForCausalLM.from_pretrained(model_name_or_path,
+                                                device_map="cuda",
+                                                trust_remote_code=False,
+                                                revision="main")
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
+    tokenizer.pad_token = tokenizer.eos_token
+    max_tokens = 45
+
+    prompt_template=f'''[INST] <<SYS>>
+    You are a helpful assistant.
+    Your job is to create a question about a paragraph of a document untitled "{title_doc}".
+    The paragraph title is "{title_para}".
+    If you see that the question that you are creating will not respect {max_tokens} tokens, find a way to make it shorter.
+    If you see that the document paragraph seems to be code flattened, try to analyze it and create a question about it.
+    If you see that the paragraph is a table, try to create a question about it.
+    If you can't create a question about the paragraph, just rephrase {title_para} so that it becomes a question.
+    Your response shall only contains one question, shall be concise and shall respect the following format:
+    "Question: <question>"
+    The paragraph you need to create a question about is the following :
+    <</SYS>>
+    {prompt}[/INST]
+
+    '''
+
+    input_ids = tokenizer(prompt_template, return_tensors='pt').input_ids.cuda()
+    output = model.generate(inputs=input_ids, temperature=0.7, do_sample=True, top_p=0.95, top_k=40, max_new_tokens=max_tokens,num_return_sequences=1)
+
+    res1 = tokenizer.decode(output[0][input_ids.shape[-1]:], skip_special_tokens=True)
+
+    print(res1)
+    print("-"*len(res1))
+    return res1

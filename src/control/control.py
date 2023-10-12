@@ -6,20 +6,23 @@ from src.model.block import Block
 
 
 class Chatbot:
-    def __init__(self, llm_agent, retriever):
+    def __init__(self, llm_agent : LlmAgent, retriever: Retriever):
         self.retriever = retriever
         self.llm = llm_agent
 
     def get_response(self, query, histo):
         histo_conversation, histo_queries = self._get_histo(histo)
-        queries = histo_queries
+        langage_of_query = self.llm.detect_language(query).lower()
+        queries = self.llm.translate(text=histo_queries)
         block_sources = self.retriever.similarity_search(query=queries)
         block_sources = self._select_best_sources(block_sources)
         sources_contents = [s.content for s in block_sources]
         context = '\n'.join(sources_contents)
-        answer = self.llm.generate_paragraph(query=queries, histo=histo_conversation, context=context, language='en')
-        answer = self.llm.generate_answer(answer_en=answer, query=query, histo=histo_conversation, context=context)
-        answer = self._clean_answer(answer)
+        answer = self.llm.generate_paragraph(query=queries, histo=histo_conversation, context=context, language=langage_of_query)
+        answer = self.llm.generate_answer(answer=answer, query=query, histo=histo_conversation, context=context,language=langage_of_query)
+        # print(answer.split('bot:')[1].strip())
+        # print("*************")
+        # answer = self._clean_answer(answer)
         return answer, block_sources
 
     
@@ -57,6 +60,7 @@ class Chatbot:
 
     @staticmethod
     def _clean_answer(answer: str) -> str:
+        print(answer)
         answer = answer.strip('bot:')
         while answer and answer[-1] in {"'", '"', " ", "`"}:
             answer = answer[:-1]
